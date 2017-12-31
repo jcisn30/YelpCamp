@@ -11,13 +11,15 @@ var express                 = require("express"),
     User                    = require("./models/user"),
     seedDB                  = require("./seeds");
     
-
+mongoose.Promise = global.Promise;
 //requiring routes
 var commentRoutes       = require("./routes/comments"),
     campgroundRoutes    = require("./routes/campgrounds"),
     indexRoutes          = require("./routes/index");
 
-mongoose.connect("mongodb://localhost/yelp_camp", {useMongoClient: true});
+// mongoose.connect("mongodb://localhost/yelp_camp", {useMongoClient: true});
+mongoose.connect("mongodb://yelpsa:N3bM3x!!@ds135747.mlab.com:35747/yelpcampnebmex", {useMongoClient: true});
+
 app.use(bodyParser.urlencoded({extended: true}));
 
 //SCHEMA SETUP
