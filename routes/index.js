@@ -6,6 +6,7 @@ var Campground = require("../models/campground");
 var async = require("async");
 var nodemailer = require("nodemailer");
 var crypto = require("crypto");
+var middleware = require("../middleware");
 
 router.get("/", function(req, res){
     res.render("landing");
@@ -171,7 +172,7 @@ router.post('/reset/:token', function(req, res) {
       var mailOptions = {
         to: user.email,
         from: 'cisneros24@mail.com',
-        subject: 'Your password has been changed',
+        subject: 'YelpCamp password has been changed',
         text: 'Hello,\n\n' +
           'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
@@ -187,6 +188,7 @@ router.post('/reset/:token', function(req, res) {
 
 //User Profiles
 router.get("/users/:id", function(req, res){
+
    User.findById(req.params.id, function(err, foundUser){
        if(err){
            req.flash("error", "Something went wrong");
