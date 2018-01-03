@@ -1,6 +1,7 @@
 //all middleware code
 var Campground = require("../models/campground");
 var Comment = require("../models/comment");
+var User = require("../models/user");
 var middlewareObj = {};
 
 middlewareObj.checkCampgroundOwnership = function(req, res, next) {
@@ -50,6 +51,10 @@ middlewareObj.checkCommentOwnership = function(req, res, next){
             res.redirect("back");
         }
 }
+
+
+        
+    
 
 middlewareObj.isLoggedIn = function(req, res, next){
     if(req.isAuthenticated()){

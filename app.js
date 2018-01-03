@@ -19,7 +19,9 @@ var commentRoutes       = require("./routes/comments"),
 
 
 var URL = process.env.DATABASEURL || "mongodb://localhost/yelp_camp";
+var GMAILPW = process.env.GMAILPW;
 mongoose.connect(URL);
+mongoose.connect(GMAILPW);
 
 
 

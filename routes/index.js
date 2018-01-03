@@ -8,6 +8,7 @@ var nodemailer = require("nodemailer");
 var crypto = require("crypto");
 var middleware = require("../middleware");
 
+
 router.get("/", function(req, res){
     res.render("landing");
 });
@@ -190,14 +191,14 @@ router.post('/reset/:token', function(req, res) {
 router.get("/users/:id", function(req, res){
 
    User.findById(req.params.id, function(err, foundUser){
-       if(err){
+       if(err || !foundUser){
            req.flash("error", "Something went wrong");
-           res.redirect("/");
+           return res.redirect("back");
        } 
        Campground.find().where("author.id").equals(foundUser._id).exec(function(err, campgrounds){
-            if(err){
+            if(err || !campgrounds){
            req.flash("error", "Something went wrong");
-           res.redirect("/");
+           res.redirect("back");
             }
            res.render("users/show", {user: foundUser, campgrounds: campgrounds});
        
