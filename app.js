@@ -11,6 +11,8 @@ var express                 = require("express"),
     User                    = require("./models/user"),
     seedDB                  = require("./seeds");
     
+require('dotenv').config()
+    
 mongoose.Promise = global.Promise;
 //requiring routes
 var commentRoutes       = require("./routes/comments"),
@@ -18,10 +20,9 @@ var commentRoutes       = require("./routes/comments"),
     indexRoutes          = require("./routes/index");
 
 
-var URL = process.env.DATABASEURL || "mongodb://localhost/yelp_camp";
-var GMAILPW = process.env.GMAILPW;
-mongoose.connect(URL);
-mongoose.connect(GMAILPW);
+
+mongoose.connect(process.env.URL);
+mongoose.connect(process.env.GMMAILPW);
 
 
 
