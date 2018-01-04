@@ -20,8 +20,8 @@ var commentRoutes       = require("./routes/comments"),
     indexRoutes          = require("./routes/index");
 
 
-
-mongoose.connect(process.env.URL);
+var URL = process.env.DATABASEURL;
+mongoose.connect(URL);
 mongoose.connect(process.env.GMMAILPW);
 
 
