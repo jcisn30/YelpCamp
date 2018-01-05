@@ -3,6 +3,8 @@ var router = express.Router();
 var nodemailer = require("nodemailer");
 var request = require("request");
 var User = require("../models/user");
+var async = require("async");
+var crypto = require("crypto");
 
 // contact form
 router.get("/", function(req, res) {
@@ -37,7 +39,7 @@ router.post("/send", function(req, res) {
         });
          
         var mailOptions = {
-            from: 'cinseros24@gmail.com',
+            from: 'cisneros24@gmail.com',
             to: User.email,
             replyTo: req.body.email,
             subject: "Let's Camp contact request from: " + req.body.name,
