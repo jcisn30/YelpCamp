@@ -8,7 +8,7 @@ var crypto = require("crypto");
 
 // contact form
 router.get("/", function(req, res) {
-   res.render("contact/contactMe", {page: 'contact'});
+   res.render("contact/contact", {page: 'contact'});
 });
 
 router.post("/send", function(req, res) {
