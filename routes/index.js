@@ -7,6 +7,7 @@ var async = require("async");
 var nodemailer = require("nodemailer");
 var crypto = require("crypto");
 var middleware = require("../middleware");
+var request = require("request");
 
 
 router.get("/", function(req, res){
@@ -22,6 +23,25 @@ router.get("/register", function(req, res){
 
 //handle sign up logic
 router.post("/register", function(req, res){
+  const captcha = req.body["g-recaptcha-response"];
+    if (!captcha) {
+      console.log(req.body);
+      req.flash("error", "Please select captcha");
+      return res.redirect("/register");
+    }
+    // secret key
+    // var secretKey = process.env.CAPTCHADEV;
+    var secretKey = process.env.CAPTCHA;
+    // Verify URL
+    var verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captcha}&remoteip=${req.connection.remoteAddress}`;
+    // Make request to Verify URL
+    request.get(verifyURL, (err, response, body) => {
+      // if not successful
+      if (body.success !== undefined && !body.success) {
+        req.flash("error", "Captcha Failed");
+        return res.redirect("/register");
+      }
+      
     var newUser = new User({
             username: req.body.username,
             firstName: req.body.firstName,
@@ -30,7 +50,7 @@ router.post("/register", function(req, res){
             avatar: req.body.avatar
             
         });
-    if(req.body.adminCode === "Y3lp@33*!"){
+    if(req.body.adminCode === process.env.ADMINCODE){
         newUser.isAdmin = true;
     }
    User.register(newUser, req.body.password, function(err, user){
@@ -42,10 +62,10 @@ router.post("/register", function(req, res){
        passport.authenticate("local")(req, res, function(){
            req.flash("success", "Welcome to YelpCamp" + " " + user.username);
            res.redirect("/campgrounds");
-       });
-   });
+        });
+    });
+  });
 });
-
 //show login form
 router.get("/login", function(req, res){
     res.render("login", {page: "login"});
@@ -97,6 +117,7 @@ router.post('/forgot', function(req, res, next) {
           done(err, token, user);
         });
       });
+   
     },
     function(token, user, done) {
       var smtpTransport = nodemailer.createTransport({
