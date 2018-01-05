@@ -9,7 +9,8 @@ var express                 = require("express"),
     Campground              = require("./models/campground"),
     Comment                 = require("./models/comment"),
     User                    = require("./models/user"),
-    seedDB                  = require("./seeds");
+    seedDB                  = require("./seeds"),
+    contactRoutes           = require("./routes/contact");
    
     
 require('dotenv').config()
@@ -95,6 +96,7 @@ app.use(function(req, res, next){
 app.use("/campgrounds/:id/comments", commentRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/", indexRoutes);
+app.use("/contact", contactRoutes);
 
 
 app.listen(process.env.PORT, process.env.IP, function(){
