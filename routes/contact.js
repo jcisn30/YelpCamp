@@ -40,7 +40,7 @@ router.post("/send", function(req, res) {
          
         var mailOptions = {
             from: 'cisneros24@gmail.com',
-            to: User.email,
+            to: 'cisneros24@gmail.com',
             replyTo: req.body.email,
             subject: "Let's Camp contact request from: " + req.body.name,
             text: 'You have received an email from... Name: '+ req.body.name + ' Phone: ' + req.body.phone + ' Email: ' + req.body.email + ' Message: ' + req.body.message,
