@@ -91,7 +91,7 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
     var lat = data.results[0].geometry.location.lat;
     var lng = data.results[0].geometry.location.lng;
     var location = data.results[0].formatted_address;
-    var newCampground = {name: name, price: price, image: image, description: desc, author: author, location: location, lat: lat, lng: lng};
+    var newCampground = {name: req.body.campground.name, price: req.body.campground.price, image: req.body.campgroundimage, description: req.body.campground.desc, author: req.body.campground.author, location: location, lat: lat, lng: lng};
 
     // campgrounds.push(newCampground);
     //creat new campground and save to database
