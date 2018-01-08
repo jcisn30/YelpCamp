@@ -37,7 +37,7 @@ router.get("/:id/edit", middleware.checkUserOwnership, function(req, res) {
 });
 
 router.put("/:id", function(req, res){
-     var newData = {firstName: req.body.firstName, lastName: req.body.lastName, email: req.body.email, adminCode: req.body.adminCode};
+     var newData = {firstName: req.body.user.firstName, lastName: req.body.user.lastName, email: req.body.user.email, adminCode: req.body.user.adminCode};
   User.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, user){
      if(err || !user){
          res.redirect("back");
