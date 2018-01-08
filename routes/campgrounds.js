@@ -1,11 +1,17 @@
+//----------------------------------------------------------------------------//
+//--------------------------Dependencies For Route----------------------------//
+//----------------------------------------------------------------------------//
 var express = require("express");
 var router = express.Router();
 var Campground = require("../models/campground");
 var middleware = require("../middleware");
 var geocoder = require("geocoder");
 var multer = require('multer');
+var cloudinary = require('cloudinary');
 
-//multer and cloudinary code
+//----------------------------------------------------------------------------//
+//--------------------------multer code---------------------------------------//
+//----------------------------------------------------------------------------//
 var storage = multer.diskStorage({
   filename: function(req, file, callback) {
     callback(null, Date.now() + file.originalname);
@@ -20,14 +26,20 @@ var imageFilter = function (req, file, cb) {
 };
 var upload = multer({ storage: storage, fileFilter: imageFilter})
 
-var cloudinary = require('cloudinary');
+//----------------------------------------------------------------------------//
+//--------------------------cloudinary code-----------------------------------//
+//----------------------------------------------------------------------------//
+
 cloudinary.config({ 
-  cloud_name: 'learntocodeinfo', 
+  cloud_name: 'dux6bkfas', 
   api_key: process.env.CLOUDINARY_API_KEY, 
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-//Index Route - show all campgrounds
+//----------------------------------------------------------------------------//
+//-----------------------Index Route - Show all campgrounds-------------------//
+//----------------------------------------------------------------------------//
+
 router.get("/", function(req, res){
     var perPage = 8;
     var pageQuery = parseInt(req.query.page);
@@ -75,6 +87,9 @@ router.get("/", function(req, res){
 });
 
 
+//----------------------------------------------------------------------------//
+//---------------------------Creates New Campground---------------------------//
+//----------------------------------------------------------------------------//
 //CREATE Route - add a new campground to DB
 router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res){
     
@@ -89,7 +104,8 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
         username: req.user.username
     }
     
-    geocoder.geocode(req.body.campground.location, function (err, data) {
+    //Location Code - Geocode Package
+    geocoder.geocode(req.body.location, function (err, data) {
     if (err || data.status === 'ZERO_RESULTS') {
       req.flash('error', 'Invalid address');
       return res.redirect('back');
@@ -99,12 +115,12 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
     var location = data.results[0].formatted_address;
     
    
-    // campgrounds.push(newCampground);
-    //creat new campground and save to database
+  
     cloudinary.uploader.upload(req.file.path, function(result) {
   // add cloudinary url for the image to the campground object under image property
     req.body.campground.image = result.secure_url;
     
+     //Captures All Objects And Stores Them  
     var newCampground = {name: req.body.campground.name, image: req.body.campground.image, description: req.body.campground.desc, price: req.body.campground.price, author:req.body.campground.author, location: location, lat: lat, lng: lng};
      
   // add author to campground
@@ -123,7 +139,8 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
 //     });
 //     });
 // });
-
+            //creat new campground and save to database
+            // campgrounds.push(newCampground);
             Campground.create(newCampground, function(err, newlyCreated){
                 if(err){
                     console.log(err);
@@ -137,11 +154,18 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
 });
 
 
+//----------------------------------------------------------------------------//
+//-----------------------------New Campground Form----------------------------//
+//----------------------------------------------------------------------------//
 //NEW Route - show form to create new campground
 router.get("/new", middleware.isLoggedIn, function(req, res){
     res.render("campgrounds/new", {page: "campgrounds"});
 });
 
+
+//----------------------------------------------------------------------------//
+//--------------------SHOW ROUTE - Displays Specific Camp---------------------//
+//----------------------------------------------------------------------------//
 //SHOW - shows more info about one campground
 router.get("/:id", function(req, res){
     //find campground with provided id
@@ -160,6 +184,16 @@ router.get("/:id", function(req, res){
   
 });
 
+
+
+//----------------------------------------------------------------------------//
+//-----------------------------------CRUD Routes------------------------------//
+//----------------------------------------------------------------------------//
+
+
+//----------------------------------------------------------------------------//
+//---------------------------Edit Campground Route---------------------------//
+//----------------------------------------------------------------------------/
 //Edit Campground Route
 router.get("/:id/edit", middleware.checkCampgroundOwnership,function (req, res){
     // //is user logged in
@@ -199,6 +233,10 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership,function (req, res){
     
 // });
 
+//----------------------------------------------------------------------------//
+//----------------------------Campground Update Route-------------------------//
+//----------------------------------------------------------------------------//
+
 router.put("/:id", function(req, res){
   geocoder.geocode(req.body.campground.location, function (err, data) {
     var lat = data.results[0].geometry.location.lat;
@@ -218,6 +256,9 @@ router.put("/:id", function(req, res){
 });
 
 
+//----------------------------------------------------------------------------//
+//---------------------------Destory Campground Route-------------------------//
+//----------------------------------------------------------------------------//
 //Destroy Camground Route
 router.delete("/:id", middleware.checkCampgroundOwnership, function(req, res){
     Campground.findByIdAndRemove(req.params.id, function(err){
@@ -260,12 +301,16 @@ router.delete("/:id", middleware.checkCampgroundOwnership, function(req, res){
   
 // }
 
-//search funtion
+//----------------------------------------------------------------------------//
+//--------------------------------Search Functoin-----------------------------//
+//----------------------------------------------------------------------------//
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
 
 
-
+//----------------------------------------------------------------------------//
+//--------------------------------Exports Data--------------------------------//
+//----------------------------------------------------------------------------//
 
 module.exports = router;
