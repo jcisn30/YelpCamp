@@ -91,13 +91,17 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
     var lat = data.results[0].geometry.location.lat;
     var lng = data.results[0].geometry.location.lng;
     var location = data.results[0].formatted_address;
-    var newCampground = {name: req.body.campground.name, price: req.body.campground.price, image: req.body.campgroundimage, description: req.body.campground.desc, author: req.body.campground.author, location: location, lat: lat, lng: lng};
-
+    
+   
     // campgrounds.push(newCampground);
     //creat new campground and save to database
     cloudinary.uploader.upload(req.file.path, function(result) {
   // add cloudinary url for the image to the campground object under image property
     req.body.campground.image = result.secure_url;
+    
+     var newCampground = {name: req.body.campground.name, price: req.body.campground.price, image: req.body.campgroundimage, description: req.body.campground.desc, author: req.body.campground.author, location: location, lat: lat, lng: lng};
+
+    
   // add author to campground
     req.body.campground.author = {
     id: req.user._id,
