@@ -9,6 +9,8 @@ var geocoder = require("geocoder");
 var multer = require('multer');
 var cloudinary = require('cloudinary');
 
+
+
 //----------------------------------------------------------------------------//
 //--------------------------multer code---------------------------------------//
 //----------------------------------------------------------------------------//
@@ -26,6 +28,9 @@ var imageFilter = function (req, file, cb) {
 };
 var upload = multer({ storage: storage, fileFilter: imageFilter})
 
+
+
+
 //----------------------------------------------------------------------------//
 //--------------------------cloudinary code-----------------------------------//
 //----------------------------------------------------------------------------//
@@ -35,6 +40,8 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY, 
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+
 
 //----------------------------------------------------------------------------//
 //-----------------------Index Route - Show all campgrounds-------------------//
@@ -87,6 +94,8 @@ router.get("/", function(req, res){
 });
 
 
+
+
 //----------------------------------------------------------------------------//
 //---------------------------Creates New Campground---------------------------//
 //----------------------------------------------------------------------------//
@@ -128,6 +137,7 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
     id: req.user._id,
     username: req.user.username
   }
+    });
     
 // Campground.create(req.body.campground, function(err, campground) {
 //         if (err) {
@@ -151,7 +161,7 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
             });
         });
     });
-});
+
 
 
 //----------------------------------------------------------------------------//
