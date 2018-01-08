@@ -89,7 +89,7 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
         username: req.user.username
     }
     
-    geocoder.geocode(req.body.campground.location, function (err, data) {
+    geocoder.geocode(req.body.campground.campground.location, function (err, data) {
     if (err || data.status === 'ZERO_RESULTS') {
       req.flash('error', 'Invalid address');
       return res.redirect('back');
