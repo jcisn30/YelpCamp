@@ -114,7 +114,7 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
     }
     
     //Location Code - Geocode Package
-    geocoder.geocode(req.body.location, function (err, data) {
+    geocoder.geocode(req.body.campground.location, function (err, data) {
     if (err || data.status === 'ZERO_RESULTS') {
       req.flash('error', 'Invalid address');
       return res.redirect('back');
@@ -129,16 +129,18 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
   // add cloudinary url for the image to the campground object under image property
     req.body.campground.image = result.secure_url;
     
-     //Captures All Objects And Stores Them  
-    var newCampground = {name: req.body.campground.name, image: req.body.campground.image, description: req.body.campground.desc, price: req.body.campground.price, author:req.body.campground.author, location: location, lat: lat, lng: lng};
+     
+  
      
   // add author to campground
     req.body.campground.author = {
     id: req.user._id,
     username: req.user.username
   }
-    });
-    
+   //Captures All Objects And Stores Them  
+    var newCampground = {name: req.body.campground.name, image: req.body.campground.image, description: req.body.campground.description, price: req.body.campground.price, author: req.body.campground.author, location: location, lat: lat, lng: lng}; 
+
+
 // Campground.create(req.body.campground, function(err, campground) {
 //         if (err) {
 //           req.flash('error', err.message);
@@ -156,12 +158,12 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
                     console.log(err);
                 } else{
                      //redirect back to campgrounds page
-            res.redirect("/campgrounds");
+                    res.redirect("/campgrounds");
                 }
             });
         });
     });
-
+ });
 
 
 //----------------------------------------------------------------------------//
