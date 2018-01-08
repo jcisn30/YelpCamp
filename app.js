@@ -20,7 +20,8 @@ mongoose.Promise = global.Promise;
 var commentRoutes       = require("./routes/comments"),
     campgroundRoutes    = require("./routes/campgrounds"),
     indexRoutes          = require("./routes/index"),
-    userRoutes          = require("./routes/users");
+    userRoutes          = require("./routes/users"),
+    contactRoutes       = require("./routes/contact");
 
 
 var URL = process.env.DATABASEURL;
