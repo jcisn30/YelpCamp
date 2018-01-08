@@ -28,6 +28,7 @@ var URL = process.env.DATABASEURL;
 mongoose.connect(URL);
 mongoose.connect(process.env.GMMAILPW);
 
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 
 
