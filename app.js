@@ -8,7 +8,7 @@ var express                 = require("express"),
     methodOverride          = require("method-override"),
     Campground              = require("./models/campground"),
     Comment                 = require("./models/comment"),
-    User                    = require("./models/user"),
+    User                   = require("./models/user"),
     seedDB                  = require("./seeds"),
     contactRoutes           = require("./routes/contact");
    
@@ -19,7 +19,8 @@ mongoose.Promise = global.Promise;
 //requiring routes
 var commentRoutes       = require("./routes/comments"),
     campgroundRoutes    = require("./routes/campgrounds"),
-    indexRoutes          = require("./routes/index");
+    indexRoutes          = require("./routes/index"),
+    userRoutes          = require("./routes/users");
 
 
 var URL = process.env.DATABASEURL;
@@ -97,6 +98,10 @@ app.use("/campgrounds/:id/comments", commentRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/", indexRoutes);
 app.use("/contact", contactRoutes);
+app.use("/users", userRoutes);
+
+
+
 
 
 app.listen(process.env.PORT, process.env.IP, function(){

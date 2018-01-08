@@ -52,7 +52,32 @@ middlewareObj.checkCommentOwnership = function(req, res, next){
         }
 }
 
-
+middlewareObj.checkUserOwnership = function(req, res, next)
+{
+    if(req.isAuthenticated())
+            {
+                   User.findById(req.params.id, function(err, foundUser){
+                   if(err || !foundUser){
+                       req.flash("error", "Specific User not found!");
+                       res.redirect("/campgrounds");        
+                   } 
+                   else {
+                     if(foundUser._id.equals(req.user._id) || req.user.isAdmin)
+                        { next(); 
+                        } 
+                     else {
+                            // othwerwise, redirect
+                            req.flash("error", "You don't have permission to do that!");
+                            res.redirect("/campgrounds");
+                           }
+                   }         
+                   });
+            } else {
+                  // if not, redirect
+                  req.flash("error", "You need to be logged in to do that!");
+                  res.redirect("/campgrounds");
+                   }
+};
         
     
 

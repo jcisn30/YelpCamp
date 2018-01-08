@@ -208,24 +208,7 @@ router.post('/reset/:token', function(req, res) {
   });
 });
 
-//User Profiles
-router.get("/users/:id", function(req, res){
 
-   User.findById(req.params.id, function(err, foundUser){
-       if(err || !foundUser){
-           req.flash("error", "Something went wrong");
-           return res.redirect("back");
-       } 
-       Campground.find().where("author.id").equals(foundUser._id).exec(function(err, campgrounds){
-            if(err || !campgrounds){
-           req.flash("error", "Something went wrong");
-           res.redirect("back");
-            }
-           res.render("users/show", {user: foundUser, campgrounds: campgrounds});
-       
-       })
-   }) 
-});
 
 //middle ware for user logged
 // function isLoggedIn(req, res, next){
