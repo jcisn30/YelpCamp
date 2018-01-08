@@ -33,7 +33,7 @@ router.get("/", function(req, res){
     var pageQuery = parseInt(req.query.page);
     var pageNumber = pageQuery ? pageQuery : 1;
     var noMatch = null;
-    if(req.query.search) {
+    if(req.query.search && req.xhr) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
         Campground.find({name: regex}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allCampgrounds) {
             Campground.count({name: regex}).exec(function (err, count) {
@@ -77,6 +77,8 @@ router.get("/", function(req, res){
 
 //CREATE Route - add a new campground to DB
 router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res){
+    
+
     //get data from form and add to campground array
     var name = req.body.name;
     var price = req.body.price;
@@ -87,7 +89,11 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
         username: req.user.username
     }
     
-    geocoder.geocode(req.body.location, function (err, data) {
+    geocoder.geocode(req.body.campground.location, function (err, data) {
+    if (err || data.status === 'ZERO_RESULTS') {
+      req.flash('error', 'Invalid address');
+      return res.redirect('back');
+    }
     var lat = data.results[0].geometry.location.lat;
     var lng = data.results[0].geometry.location.lng;
     var location = data.results[0].formatted_address;
@@ -99,8 +105,7 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
   // add cloudinary url for the image to the campground object under image property
     req.body.campground.image = result.secure_url;
     
-    var newCampground = {name: name, image: image, description: desc, author:author, price: price, location: location, lat: lat, lng: lng};
-
+    var newCampground = {name: name, image: image, description: desc, price: price, author:author, location: location, lat: lat, lng: lng};
      
   // add author to campground
     req.body.campground.author = {
