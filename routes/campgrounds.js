@@ -80,7 +80,7 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
     //get data from form and add to campground array
     var name = req.body.name;
     var price = req.body.price;
-    var image = req.body.image;
+    var image = req.body.image ? req.body.image : "/images/temp.png";
     var desc = req.body.description;
     var author = {
         id: req.user._id,
