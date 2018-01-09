@@ -16,6 +16,17 @@
     padding: 0;
 }
 
+.input {
+     width: 30%; 
+     margin: 25px auto;
+}
+
+.center {
+    text-align: center;
+}
+
+
+
 .delete-form {
     display: inline;
 }
@@ -28,4 +39,15 @@
 
 #copy {
     text-align: center;
+}
+
+/* Mobile settings */
+
+@media screen and (min-device-width : 320px) and (max-device-width : 480px){
+    .input{
+        width: 90%;
+    
+    }
+    
+    
 }

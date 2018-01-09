@@ -104,8 +104,8 @@ body {
 
 #landing-header {
     position: fixed;
-    bottom: 15%;
-     width: 100%;
+    bottom: 10%;
+    width: 100%;
      
     
 }
@@ -116,5 +116,6 @@ body {
 
 .btn-link {
   color: black;
+  font-size: xx-large;
 }
 }
