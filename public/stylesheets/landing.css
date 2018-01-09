@@ -84,3 +84,15 @@ body {
 #copy {
     display: none;
 }
+
+.btn-link {
+  color: white;
+}
+
+/* mobile landing page picture */
+@media screen and (min-device-width : 320px) and (max-device-width : 480px) {
+.slideshow { 
+ 
+ background-image: url(https://i.pinimg.com/736x/50/1b/2c/501b2cfbf9520b858e8661ab1d84b1f0--simple-drawings-draw-simple.jpg);
+}
+}

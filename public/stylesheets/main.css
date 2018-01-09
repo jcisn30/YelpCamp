@@ -1,3 +1,13 @@
+.navbar-default {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.jumbotron {
+    background-color: transparent;
+    text-align: center;
+}
+
 .thumbnail img {
     width: 100%;
 }
