@@ -8,9 +8,12 @@ var express                 = require("express"),
     methodOverride          = require("method-override"),
     Campground              = require("./models/campground"),
     Comment                 = require("./models/comment"),
-    User                   = require("./models/user"),
+    User                    = require("./models/user"),
     seedDB                  = require("./seeds"),
-    contactRoutes           = require("./routes/contact");
+    contactRoutes           = require("./routes/contact"),
+    cors                    = require('cors'),
+    multipart               = require('connect-multiparty');
+    
    
     
 require('dotenv').config()
@@ -33,6 +36,7 @@ mongoose.connect(process.env.GMMAILPW);
 
 
 app.use(bodyParser.urlencoded({extended: true}));
+
 
 //SCHEMA SETUP
 // var campgroundSchema = new mongoose.Schema({

@@ -8,6 +8,8 @@ var middleware = require("../middleware");
 var geocoder = require("geocoder");
 var multer = require('multer');
 var cloudinary = require('cloudinary');
+var cors = require('cors');
+var multipart = require('connect-multiparty');
 
 
 
@@ -42,6 +44,14 @@ cloudinary.config({
 });
 
 
+//----------------------------------------------------------------------------//
+//--------------------------------Search Function-----------------------------//
+//----------------------------------------------------------------------------//
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
 
 //----------------------------------------------------------------------------//
 //-----------------------Index Route - Show all campgrounds-------------------//
@@ -52,11 +62,12 @@ router.get("/", function(req, res){
     var pageQuery = parseInt(req.query.page);
     var pageNumber = pageQuery ? pageQuery : 1;
     var noMatch = null;
-    if(req.query.search && req.xhr) {
+    
+    if(req.query.search) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
         Campground.find({name: regex}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allCampgrounds) {
             Campground.count({name: regex}).exec(function (err, count) {
-                if (err) {
+                if (err || !allCampgrounds) {
                     console.log(err);
                     res.redirect("back");
                 } else {
@@ -77,7 +88,7 @@ router.get("/", function(req, res){
         // get all campgrounds from DB
         Campground.find({}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allCampgrounds) {
             Campground.count().exec(function (err, count) {
-                if (err) {
+                if (err || !allCampgrounds) {
                     console.log(err);
                 } else {
                     res.render("campgrounds/index", {
@@ -130,7 +141,7 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
     req.body.campground.image = result.secure_url;
     
     
-  
+    
      
   // add author to campground
     req.body.campground.author = {
@@ -313,12 +324,6 @@ router.delete("/:id", middleware.checkCampgroundOwnership, function(req, res){
   
 // }
 
-//----------------------------------------------------------------------------//
-//--------------------------------Search Functoin-----------------------------//
-//----------------------------------------------------------------------------//
-function escapeRegex(text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-};
 
 
 //----------------------------------------------------------------------------//
