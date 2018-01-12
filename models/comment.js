@@ -1,5 +1,9 @@
 var mongoose = require("mongoose");
 
+//----------------------------------------------------------------------------//
+//---------------------- Comment Schema Setup --------------------------------//
+//----------------------------------------------------------------------------//
+
 var commentSchema = mongoose.Schema({
     text: String,
     createdAt: {type: Date, default: Date.now},

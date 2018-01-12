@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------//
-//--------------------------Dependencies For Route----------------------------//
+//------------------------- Dependencies For Route ---------------------------//
 //----------------------------------------------------------------------------//
+
 var express = require("express");
 var router = express.Router();
 var app = express();
@@ -16,8 +17,9 @@ var bodyParser = require("body-parser");
 
 
 //----------------------------------------------------------------------------//
-//--------------------------multer code---------------------------------------//
+//----------------------------- Multer Code ----------------------------------//
 //----------------------------------------------------------------------------//
+
 var storage = multer.diskStorage({
   filename: function(req, file, callback) {
     callback(null, Date.now() + file.originalname);
@@ -33,15 +35,16 @@ var imageFilter = function (req, file, cb) {
 var upload = multer({ storage: storage, fileFilter: imageFilter})
 
 //----------------------------------------------------------------------------//
-//----------------------------Moderate Image----------------------------------//
+//--------------------------- Moderate Image ---------------------------------//
 //----------------------------------------------------------------------------//
+
 app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 
 
 //----------------------------------------------------------------------------//
-//--------------------------cloudinary code-----------------------------------//
+//---------------------------- Cloudinary Code -------------------------------//
 //----------------------------------------------------------------------------//
 
 cloudinary.config({ 
@@ -52,7 +55,7 @@ cloudinary.config({
 
 
 //----------------------------------------------------------------------------//
-//--------------------------------Search Function-----------------------------//
+//--------------------------- Search Function --------------------------------//
 //----------------------------------------------------------------------------//
 
 function escapeRegex(text) {
@@ -61,7 +64,7 @@ function escapeRegex(text) {
 
 
 //----------------------------------------------------------------------------//
-//-----------------------Index Route - Show all campgrounds-------------------//
+//---------------------- Index Route - Show All Campgrounds ------------------//
 //----------------------------------------------------------------------------//
 
 router.get("/", function(req, res){
@@ -115,9 +118,9 @@ router.get("/", function(req, res){
 
 
 //----------------------------------------------------------------------------//
-//---------------------------Creates New Campground---------------------------//
+//-------------------------- Create New Campground ---------------------------//
 //----------------------------------------------------------------------------//
-//CREATE Route - add a new campground to DB
+
 router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res){
     
 
@@ -188,25 +191,26 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
 
 
 //----------------------------------------------------------------------------//
-//-----------------------------New Campground Form----------------------------//
+//---------------------------- New Campground Form ---------------------------//
 //----------------------------------------------------------------------------//
-//NEW Route - show form to create new campground
+
 router.get("/new", middleware.isLoggedIn, function(req, res){
     res.render("campgrounds/new", {page: "campgrounds"});
 });
 
 
 //----------------------------------------------------------------------------//
-//--------------------SHOW ROUTE - Displays Specific Camp---------------------//
+//------------------- SHOW ROUTE - Displays Specific Camp --------------------//
 //----------------------------------------------------------------------------//
-//SHOW - shows more info about one campground
+
+
 router.get("/:id", function(req, res){
     //find campground with provided id
     // Campground.findById(req.params.id, function(err, foundCampground){
     Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
         if(err || !foundCampground){
             req.flash("error", "Camground not found");
-            res.redirect("back");
+            res.redirect("/campgrounds");
         } else{
             console.log(foundCampground);
               //render show template with that campground
@@ -220,14 +224,14 @@ router.get("/:id", function(req, res){
 
 
 //----------------------------------------------------------------------------//
-//-----------------------------------CRUD Routes------------------------------//
+//-------------------------------- CRUD Routes -------------------------------//
 //----------------------------------------------------------------------------//
 
 
 //----------------------------------------------------------------------------//
-//---------------------------Edit Campground Route---------------------------//
-//----------------------------------------------------------------------------/
-//Edit Campground Route
+//-------------------------- Edit Campground Route ---------------------------//
+//----------------------------------------------------------------------------//
+
 router.get("/:id/edit", middleware.checkCampgroundOwnership,function (req, res){
     // //is user logged in
     //     if(req.isAuthenticated()){
@@ -267,7 +271,7 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership,function (req, res){
 // });
 
 //----------------------------------------------------------------------------//
-//----------------------------Campground Update Route-------------------------//
+//--------------------------- Campground Update Route ------------------------//
 //----------------------------------------------------------------------------//
 
 router.put("/:id", function(req, res){
@@ -279,7 +283,7 @@ router.put("/:id", function(req, res){
     Campground.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, campground){
         if(err){
             req.flash("error", err.message);
-            res.redirect("back");
+            res.redirect("/campgrounds");
         } else {
             req.flash("success","Successfully Updated!");
             res.redirect("/campgrounds/" + campground._id);
@@ -290,9 +294,9 @@ router.put("/:id", function(req, res){
 
 
 //----------------------------------------------------------------------------//
-//---------------------------Destory Campground Route-------------------------//
+//-------------------------- Destory Campground Route ------------------------//
 //----------------------------------------------------------------------------//
-//Destroy Camground Route
+
 router.delete("/:id", middleware.checkCampgroundOwnership, function(req, res){
     Campground.findByIdAndRemove(req.params.id, function(err){
        if(err){
@@ -337,7 +341,7 @@ router.delete("/:id", middleware.checkCampgroundOwnership, function(req, res){
 
 
 //----------------------------------------------------------------------------//
-//--------------------------------Exports Data--------------------------------//
+//------------------------------- Exports Data -------------------------------//
 //----------------------------------------------------------------------------//
 
 module.exports = router;

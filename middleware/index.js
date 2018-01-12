@@ -1,8 +1,15 @@
-//all middleware code
+//----------------------------------------------------------------------------//
+//------------------------- Middleware Dependencies --------------------------//
+//----------------------------------------------------------------------------//
+
 var Campground = require("../models/campground");
 var Comment = require("../models/comment");
 var User = require("../models/user");
 var middlewareObj = {};
+
+//----------------------------------------------------------------------------//
+//--------------------- Check Campground User Ownership ----------------------//
+//----------------------------------------------------------------------------//
 
 middlewareObj.checkCampgroundOwnership = function(req, res, next) {
     
@@ -10,7 +17,7 @@ middlewareObj.checkCampgroundOwnership = function(req, res, next) {
             Campground.findById(req.params.id, function(err, foundCampground){
         if(err || !foundCampground){
             req.flash("error", "Campground not found!");
-            res.redirect("back");
+            res.redirect("/campgrounds");
         } else {
             //does the user own campground?
             if(foundCampground.author.id.equals(req.user._id) || req.user.isAdmin) {
@@ -28,6 +35,10 @@ middlewareObj.checkCampgroundOwnership = function(req, res, next) {
     }
 
 }
+
+//----------------------------------------------------------------------------//
+//----------------------- Check Comment User Ownership -----------------------//
+//----------------------------------------------------------------------------//
 
 middlewareObj.checkCommentOwnership = function(req, res, next){
     if(req.isAuthenticated()){
@@ -51,6 +62,10 @@ middlewareObj.checkCommentOwnership = function(req, res, next){
             res.redirect("back");
         }
 }
+
+//----------------------------------------------------------------------------//
+//----------------------- Check User Profile Ownership -----------------------//
+//----------------------------------------------------------------------------//
 
 middlewareObj.checkUserOwnership = function(req, res, next)
 {
@@ -80,6 +95,9 @@ middlewareObj.checkUserOwnership = function(req, res, next)
 };
         
     
+//----------------------------------------------------------------------------//
+//---------------------- Check If User Is Logged In --------------------------//
+//----------------------------------------------------------------------------//
 
 middlewareObj.isLoggedIn = function(req, res, next){
     if(req.isAuthenticated()){

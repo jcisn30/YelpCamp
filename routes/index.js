@@ -1,3 +1,7 @@
+//----------------------------------------------------------------------------//
+//------------------------- Dependencies For Route ---------------------------//
+//----------------------------------------------------------------------------//
+
 var express = require("express");
 var router = express.Router();
 var passport = require("passport");
@@ -9,6 +13,9 @@ var crypto = require("crypto");
 var middleware = require("../middleware");
 var request = require("request");
 
+//----------------------------------------------------------------------------//
+//---------------------- Index Route - Show Landing Page ---------------------//
+//----------------------------------------------------------------------------//
 
 router.get("/", function(req, res, err){
   
@@ -17,14 +24,20 @@ router.get("/", function(req, res, err){
     
 });
 
+//----------------------------------------------------------------------------//
+//---------------------------- User Signup Form ------------------------------//
+//----------------------------------------------------------------------------//
 
 
-//show register form
 router.get("/register", function(req, res){
   res.render("register", {page: "register"});
 });
 
-//handle sign up logic
+//----------------------------------------------------------------------------//
+//---------------------------- Create New User -------------------------------//
+//----------------------------------------------------------------------------//
+
+
 router.post("/register", function(req, res){
   const captcha = req.body["g-recaptcha-response"];
     if (!captcha) {
@@ -69,12 +82,20 @@ router.post("/register", function(req, res){
     });
   });
 });
-//show login form
+
+//----------------------------------------------------------------------------//
+//---------------------------- User Login Form -------------------------------//
+//----------------------------------------------------------------------------//
+
 router.get("/login", function(req, res){
     res.render("login", {page: "login"});
 });
 
-//handling login logic
+
+//----------------------------------------------------------------------------//
+//---------------------------- User Login Handling ---------------------------//
+//----------------------------------------------------------------------------//
+
 //app.post("/login", middleware, callback)
 router.post("/login", passport.authenticate("local", 
     {
@@ -87,18 +108,27 @@ router.post("/login", passport.authenticate("local",
     
 });
 
-//logout logic route
+//----------------------------------------------------------------------------//
+//---------------------------- User Logout Handling --------------------------//
+//----------------------------------------------------------------------------//
+
 router.get("/logout", function(req, res){
     req.logout();
     req.flash("success", "You are logged out, see you next time!");
     res.redirect("/campgrounds");
 });
 
-//forgot password
-// forgot password
+//----------------------------------------------------------------------------//
+//---------------------------- User Forgot Password Form ---------------------//
+//----------------------------------------------------------------------------//
+
 router.get('/forgot', function(req, res) {
   res.render('forgot');
 });
+
+//----------------------------------------------------------------------------//
+//------------------------ User Forgot Password Handling ---------------------//
+//----------------------------------------------------------------------------//
 
 router.post('/forgot', function(req, res, next) {
   async.waterfall([
@@ -153,6 +183,8 @@ router.post('/forgot', function(req, res, next) {
   });
 });
 
+
+
 router.get('/reset/:token', function(req, res) {
   User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
     if (!user) {
@@ -162,6 +194,7 @@ router.get('/reset/:token', function(req, res) {
     res.render('reset', {token: req.params.token});
   });
 });
+
 
 router.post('/reset/:token', function(req, res) {
   async.waterfall([
@@ -222,5 +255,10 @@ router.post('/reset/:token', function(req, res) {
 //     }
 //     res.redirect("/login");
 // }
+
+
+//----------------------------------------------------------------------------//
+//------------------------------- Exports Data -------------------------------//
+//----------------------------------------------------------------------------//
 
 module.exports = router;

@@ -1,11 +1,17 @@
+//----------------------------------------------------------------------------//
+//------------------------- Dependencies For Route ---------------------------//
+//----------------------------------------------------------------------------//
+
 var express = require("express");
 var router = express.Router({mergeParams: true});
 var Campground = require("../models/campground");
 var Comment = require("../models/comment");
 var middleware = require("../middleware");
 
+//----------------------------------------------------------------------------//
+//-------------------------- Create New Comment Form -------------------------//
+//----------------------------------------------------------------------------//
 
-//comments new
 router.get("/new", middleware.isLoggedIn, function(req, res){
     //find campground by id
     Campground.findById(req.params.id, function(err, campground){
@@ -18,7 +24,10 @@ router.get("/new", middleware.isLoggedIn, function(req, res){
      
 });
 
-//comment create
+//----------------------------------------------------------------------------//
+//-------------------------- Create New Comment ------------------------------//
+//----------------------------------------------------------------------------//
+
 router.post("/", middleware.isLoggedIn, function(req, res){
     //lookup campground using id
     Campground.findById(req.params.id, function(err, campground){
@@ -54,7 +63,10 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     
 });
 
-//comment edit route
+//----------------------------------------------------------------------------//
+//-------------------------- Edit Comment ------------------------------------//
+//----------------------------------------------------------------------------//
+
 router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res){
     Campground.findById(req.params.id, function(err, foundCampground){
         if(err || !foundCampground){
@@ -73,7 +85,10 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, 
     
 });
 
-//comment update route
+//----------------------------------------------------------------------------//
+//-------------------------- Update Comment ----------------------------------//
+//----------------------------------------------------------------------------//
+
 router.put("/:comment_id", function(req, res){
    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, upatedComment){
        if(err){
@@ -129,5 +144,9 @@ router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, re
   
 // }
 
+
+//----------------------------------------------------------------------------//
+//------------------------------- Exports Data -------------------------------//
+//----------------------------------------------------------------------------//
 
 module.exports = router;

@@ -1,3 +1,7 @@
+<!----------------------------------------------------------------------------->
+<!------------------------- Campgrounds Show Page ----------------------------->
+<!----------------------------------------------------------------------------->
+
 <% include ../partials/header %>
 
 <!--<div class="container">-->
@@ -40,7 +44,10 @@
             <!--         <a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>-->
             <!--    </div>-->
             <!--    <hr>-->
-            
+<!----------------------------------------------------------------------------->            
+<!-------------------------------- Comment Section Start----------------------->
+<!----------------------------------------------------------------------------->
+
             <div class="well">
               <!--Setting up the add new comment button that is used for collapsing-->
               <div class="text-right">
@@ -76,7 +83,7 @@
 <!--</div>-->
 
 
-   <!--Comment section title-->
+<!------------------------------- Comment Section Title ----------------------->
       <h4><strong>Comments <span class="glyphicon glyphicon glyphicon-comment" aria-hidden="true"></span></strong></h4>
 
       <!--Collapse Add a comment form START-->
@@ -163,10 +170,14 @@
       </div>
         <% }) %>
     </div>
-    <!--COMMENT SECTION END-->
+<!----------------------------- Comment Section End --------------------------->
 
   </div>
 </div>
+
+<!----------------------------------------------------------------------------->
+<!------------------------------ Google Maps API ------------------------------>
+<!----------------------------------------------------------------------------->
 
 <script>
   function initMap() {
@@ -196,13 +207,6 @@
   }
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaj62ddGLlqJwaurBIcwvUHiXOLHsA2o8&callback=initMap"></script>
-
-
-
-
-
-
-
 
 
 <% include ../partials/footer %>

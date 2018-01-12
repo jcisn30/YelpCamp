@@ -1,3 +1,7 @@
+//----------------------------------------------------------------------------//
+//------------------------- Dependencies For Route ---------------------------//
+//----------------------------------------------------------------------------//
+
 var express  = require("express");
 var router   = express.Router();
 var passport = require("passport");
@@ -5,8 +9,10 @@ var User = require("../models/user");
 var Campground = require("../models/campground");
 var middleware = require("../middleware");
 
+//----------------------------------------------------------------------------//
+//--------------------------- Show User Profile ------------------------------//
+//----------------------------------------------------------------------------//
 
-// USER PROFILES
 router.get("/:id", function(req, res) {
    User.findById(req.params.id, function(err, foundUser){
        if(err || !foundUser)
@@ -24,6 +30,10 @@ router.get("/:id", function(req, res) {
    });
 });
 
+//----------------------------------------------------------------------------//
+//---------------------------- Edit User Profile -----------------------------//
+//----------------------------------------------------------------------------//
+
 router.get("/:id/edit", middleware.checkUserOwnership, function(req, res) {
      User.findById(req.params.id, function(err, foundUser)
      { if(err || !foundUser)
@@ -35,6 +45,10 @@ router.get("/:id/edit", middleware.checkUserOwnership, function(req, res) {
         }
      });
 });
+
+//----------------------------------------------------------------------------//
+//---------------------------- Update User Profile ---------------------------//
+//----------------------------------------------------------------------------//
 
 router.put("/:id", function(req, res){
      var newData = {firstName: req.body.user.firstName, lastName: req.body.user.lastName, email: req.body.user.email, adminCode: req.body.user.adminCode};
@@ -48,5 +62,8 @@ router.put("/:id", function(req, res){
   });
 });
 
+//----------------------------------------------------------------------------//
+//------------------------------- Exports Data -------------------------------//
+//----------------------------------------------------------------------------//
 
 module.exports = router;
