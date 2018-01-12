@@ -74,6 +74,8 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(flash());
+
+
 //seedDB(); //seed the database
 
 //moment
@@ -108,6 +110,9 @@ app.use("/users", userRoutes);
 
 
 
+app.get("*", function(req,res) {
+      res.render("404");    
+});
 
 
 app.listen(process.env.PORT, process.env.IP, function(){

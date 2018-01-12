@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------------//
 var express = require("express");
 var router = express.Router();
+var app = express();
 var Campground = require("../models/campground");
 var middleware = require("../middleware");
 var geocoder = require("geocoder");
@@ -10,6 +11,7 @@ var multer = require('multer');
 var cloudinary = require('cloudinary');
 var cors = require('cors');
 var multipart = require('connect-multiparty');
+var bodyParser = require("body-parser");
 
 
 
@@ -30,7 +32,12 @@ var imageFilter = function (req, file, cb) {
 };
 var upload = multer({ storage: storage, fileFilter: imageFilter})
 
-
+//----------------------------------------------------------------------------//
+//----------------------------Moderate Image----------------------------------//
+//----------------------------------------------------------------------------//
+app.use(bodyParser.json());
+app.use(cors());
+app.use(bodyParser.urlencoded({extended: true}));
 
 
 //----------------------------------------------------------------------------//
@@ -136,9 +143,12 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
     
    
   
-    cloudinary.uploader.upload(req.file.path, function(result) {
+    cloudinary.v2.uploader.upload(req.file.path, {moderation: "aws_rek"}, function(err,result) {
+        
   // add cloudinary url for the image to the campground object under image property
     req.body.campground.image = result.secure_url;
+    
+    
     
     
     

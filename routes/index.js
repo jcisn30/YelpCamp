@@ -10,15 +10,18 @@ var middleware = require("../middleware");
 var request = require("request");
 
 
-router.get("/", function(req, res){
+router.get("/", function(req, res, err){
+  
     res.render("landing");
+ 
+    
 });
 
 
 
 //show register form
 router.get("/register", function(req, res){
-    res.render("register", {page: "register"});
+  res.render("register", {page: "register"});
 });
 
 //handle sign up logic
