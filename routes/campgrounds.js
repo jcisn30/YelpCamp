@@ -212,7 +212,7 @@ router.get("/:id", function(req, res){
             req.flash("error", "Camground not found");
             res.redirect("/campgrounds");
         } else{
-            console.log(foundCampground);
+            
               //render show template with that campground
             res.render("campgrounds/show", {campground: foundCampground});
         }
@@ -232,7 +232,7 @@ router.get("/:id", function(req, res){
 //-------------------------- Edit Campground Route ---------------------------//
 //----------------------------------------------------------------------------//
 
-router.get("/:id/edit", middleware.checkCampgroundOwnership,function (req, res){
+router.get("/:id/edit", middleware.checkCampgroundOwnership,  function (req, res){
     // //is user logged in
     //     if(req.isAuthenticated()){
             Campground.findById(req.params.id, function(err, foundCampground){
@@ -274,20 +274,32 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership,function (req, res){
 //--------------------------- Campground Update Route ------------------------//
 //----------------------------------------------------------------------------//
 
-router.put("/:id", function(req, res){
+router.put("/:id", upload.single('campground[image]'),  function(req, res){
   geocoder.geocode(req.body.campground.location, function (err, data) {
     var lat = data.results[0].geometry.location.lat;
     var lng = data.results[0].geometry.location.lng;
     var location = data.results[0].formatted_address;
+    cloudinary.v2.uploader.upload(req.file.path, {moderation: "aws_rek"}, function(err,result) {
+        
+  // add cloudinary url for the image to the campground object under image property
+    req.body.campground.image = result.secure_url;
+    
     var newData = {name: req.body.campground.name, image: req.body.campground.image, description: req.body.campground.description, price: req.body.campground.price, location: location, lat: lat, lng: lng};
-    Campground.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, campground){
+    Campground.findByIdAndUpdate(req.params.id, {$set: newData},  function(err, campground){
+         
+         
+    
         if(err){
             req.flash("error", err.message);
             res.redirect("/campgrounds");
         } else {
+           
+    
             req.flash("success","Successfully Updated!");
             res.redirect("/campgrounds/" + campground._id);
         }
+        
+        });
     });
   });
 });
