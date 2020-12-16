@@ -47,8 +47,9 @@ var commentRoutes       = require("./routes/comments"),
 //------------------------- Database & Gmail Connection ----------------------//
 //----------------------------------------------------------------------------//
 
+var dbURL = process.env.DB_URL;
 var URL = process.env.DATABASEURL;
-mongoose.connect(URL);
+mongoose.connect(dbURL);
 mongoose.connect(process.env.GMMAILPW);
 
 //----------------------------------------------------------------------------//
